@@ -1,3 +1,3 @@
 # Digital_Skill_Development_and_Monitoring_System
-# RoadMap for our topic given here.
-# Added Rough Sketch of Project in PDF.
+1. RoadMap for our topic given here.
+2. Added Rough Sketch of Project in PDF.
