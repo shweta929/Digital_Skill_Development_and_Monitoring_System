@@ -1,0 +1,106 @@
+.dashboard-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #FFFFFF;
+}
+
+.dashboard-main {
+    flex: 1;
+}
+
+.dashboard-hero {
+    padding: 3.5rem 0;
+    background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+    text-align: center;
+}
+
+.container-dashboard {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.dashboard-hero h1 {
+    font-size: 3.2rem;
+    color: #2D3748;
+    margin-bottom: 0.8rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.dashboard-hero p {
+    font-size: 1.3rem;
+    color: #4A5568;
+    max-width: 700px;
+    margin: 0 auto;
+    opacity: 0;
+    animation: fadeInUp 0.8s ease-out forwards 0.2s;
+}
+
+.courses-section {
+    padding: 3rem 0;
+    background: white;
+}
+
+.courses-section .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+.section-title {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #2D3748;
+    margin-bottom: 2rem;
+    padding-left: 0.8rem;
+    border-left: 5px solid var(--primary-light);
+    text-align: left;
+}
+
+.course-grid {
+    display: flex;
+    flex-wrap: nowrap;
+    /* Force single row */
+    justify-content: flex-start;
+    gap: 2.5rem;
+    padding: 2.5rem 1rem;
+    overflow-x: auto;
+    overflow-y: visible;
+    /* CRITICAL: Prevent clipping of lift-up animations */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.course-grid::-webkit-scrollbar {
+    display: none;
+    /* Hide scrollbar Chrome/Safari */
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .dashboard-hero p {
+        font-size: 1.1rem;
+    }
+
+    .course-grid {
+        gap: 1.5rem;
+    }
+}

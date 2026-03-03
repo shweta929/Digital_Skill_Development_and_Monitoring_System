@@ -1,0 +1,277 @@
+/* =========================================================
+   FEEDBACK SECTION - ADVANCED CAROUSEL
+   ========================================================= */
+.feedback-section {
+    padding: 80px 0;
+    background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.feedback-section .container-welcome {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.feedback-section .section-title-large {
+    font-size: 36px;
+    font-weight: 800;
+    color: #1a202c;
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+/* =========================================================
+   CAROUSEL CONTAINER - 3 CARDS ALWAYS VISIBLE
+   ========================================================= */
+.feedback-carousel-container {
+    width: 100%;
+    overflow: hidden;
+    padding: 40px 0;
+}
+
+.feedback-carousel-track {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    perspective: 1000px;
+}
+
+/* =========================================================
+   FEEDBACK CARD - ADVANCED DESIGN
+   ========================================================= */
+.feedback-card-advanced {
+    flex: 0 0 320px;
+    min-height: 300px;
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 30px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1),
+        opacity 0.5s ease,
+        box-shadow 0.3s ease;
+    cursor: pointer;
+    will-change: transform, opacity;
+}
+
+/* Card Hierarchy: Left */
+.feedback-card-advanced.left {
+    transform: scale(0.9) translateX(-10px);
+    opacity: 0.45;
+    z-index: 1;
+}
+
+/* Card Hierarchy: Center (HIGHLIGHTED) */
+.feedback-card-advanced.center {
+    transform: scale(1.05);
+    opacity: 1;
+    z-index: 10;
+    box-shadow: 0 20px 60px rgba(102, 126, 234, 0.2);
+}
+
+/* Card Hierarchy: Right */
+.feedback-card-advanced.right {
+    transform: scale(0.9) translateX(10px);
+    opacity: 0.45;
+    z-index: 1;
+}
+
+/* Hover Effects (does NOT stop rotation) */
+.feedback-card-advanced:hover {
+    transform: scale(0.95) translateY(-8px);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.12);
+}
+
+.feedback-card-advanced.center:hover {
+    transform: scale(1.08) translateY(-5px);
+    box-shadow: 0 25px 70px rgba(102, 126, 234, 0.25);
+}
+
+/* =========================================================
+   CARD INNER CONTENT
+   ========================================================= */
+.feedback-card-inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* Header: Avatar + Name + Domain */
+.feedback-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.feedback-avatar {
+    flex-shrink: 0;
+}
+
+.feedback-avatar svg {
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.feedback-meta {
+    display: flex;
+    flex-direction: column;
+}
+
+.feedback-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a202c;
+    margin: 0 0 4px 0;
+}
+
+.feedback-domain {
+    font-size: 13px;
+    color: #718096;
+    font-weight: 500;
+}
+
+/* Star Rating */
+.star-rating {
+    margin-bottom: 18px;
+    display: flex;
+    gap: 2px;
+}
+
+/* Feedback Text */
+.feedback-text {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #4a5568;
+    font-style: italic;
+    flex-grow: 1;
+    margin: 0;
+}
+
+/* =========================================================
+   PAGINATION DOTS
+   ========================================================= */
+.feedback-pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 40px;
+}
+
+.feedback-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #cbd5e0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.feedback-dot.active {
+    width: 30px;
+    border-radius: 5px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+}
+
+.feedback-dot:hover {
+    background: #a0aec0;
+}
+
+.feedback-dot.active:hover {
+    background: linear-gradient(90deg, #667eea, #764ba2);
+}
+
+/* =========================================================
+   RESPONSIVE - MOBILE (1 card focus)
+   ========================================================= */
+@media (max-width: 900px) {
+    .feedback-carousel-track {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .feedback-card-advanced {
+        flex: 0 0 auto;
+        width: 90%;
+        max-width: 350px;
+    }
+
+    .feedback-card-advanced.left,
+    .feedback-card-advanced.right {
+        display: none;
+    }
+
+    .feedback-card-advanced.center {
+        transform: scale(1);
+    }
+}
+
+@media (max-width: 640px) {
+    .feedback-section {
+        padding: 50px 0;
+    }
+
+    .feedback-section .section-title-large {
+        font-size: 28px;
+        margin-bottom: 40px;
+    }
+
+    .feedback-card-advanced {
+        padding: 25px;
+        min-height: 250px;
+    }
+
+    .feedback-name {
+        font-size: 16px;
+    }
+
+    .feedback-text {
+        font-size: 14px;
+    }
+}
+
+/* =========================================================
+   LEGACY CLASSES (keeping for backwards compatibility)
+   ========================================================= */
+.review-section {
+    padding: 4rem 0;
+    background: #fdfdfd;
+}
+
+.section-title-reviews {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #2D3748;
+    margin-bottom: 3rem;
+}
+
+.feedback-carousel {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.feedback-card {
+    background: #fff;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    transition: all 0.4s ease;
+}
+
+.feedback-card.active {
+    transform: scale(1.05);
+    opacity: 1;
+}
+
+.feedback-card.prev,
+.feedback-card.next {
+    transform: scale(0.9);
+    opacity: 0.5;
+}
+
+.feedback-card.hidden {
+    display: none;
+}

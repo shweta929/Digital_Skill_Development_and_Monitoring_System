@@ -1,0 +1,363 @@
+================================================================================
+         CAREER CREDENTIALS - QA TEST REPORT PHASE 1 (INITIAL AUDIT)
+================================================================================
+Date: 2026-02-01
+Auditor: System QA Engineer
+Project: Career Credentials (CDAC)
+================================================================================
+
+================================================================================
+1. AUTHENTICATION & ROLE DETECTION
+================================================================================
+
+STATUS: PARTIALLY WORKING
+
+TESTS PERFORMED:
+- Student login via /login page
+- Admin login via same /login page with role switch
+- Trainer login attempt
+
+FINDINGS:
+
+[PASS] Student login stores: studentId, studentName, studentEmail, student object
+[PASS] Admin login stores: admin object, userRole = "ADMIN"
+[PASS] Login form dynamically changes title for Admin mode ("🔐 Admin Login")
+[PASS] No infinite login loop (fixed in previous phase)
+
+[FAIL] Admin route guard only checks localStorage.admin exists
+       - No JWT token validation
+       - No session expiry check
+       - Any user can access /admin-dashboard by setting localStorage manually
+
+[FAIL] Trainer login NOT IMPLEMENTED
+       - TrainerSection.jsx shows "Coming soon..." placeholder
+       - No /api/trainer/login endpoint exists
+       - No trainer role in database
+
+[FAIL] Role separation incomplete
+       - userRole stored but not checked in all components
+       - Student can access admin routes via direct URL manipulation
+
+================================================================================
+2. STUDENT DASHBOARD
+================================================================================
+
+STATUS: WORKING WITH MINOR GAPS
+
+TESTS PERFORMED:
+- Navigation to all dashboard sections
+- Card visibility and click handlers
+- Content loading verification
+
+FINDINGS:
+
+[PASS] Dashboard navigates to: Test, AI, Mentorship, Feedback, Sessions, Books, CRM
+[PASS] Student greeting displays name correctly
+[PASS] Card layout responsive
+
+[WARN] Pamphlet data (C++, Java, Python) is HARDCODED
+       - Not fetched from API
+       - Cannot be updated dynamically
+
+[WARN] No auth guard on /welcome or /student-dashboard
+       - Accessible without login via direct URL
+
+================================================================================
+3. TRAINER PANEL
+================================================================================
+
+STATUS: NOT IMPLEMENTED
+
+TESTS PERFORMED:
+- Navigate to /trainer-login
+- Check for trainer-specific functionality
+
+FINDINGS:
+
+[FAIL] TrainerSection.jsx is PLACEHOLDER ONLY
+       Location: d:\Cdac\Career-Portal1\Project_Cdac\frontend\src\pages\TrainerSection.jsx
+       Line 7: "Registration and Login features coming soon..."
+
+[FAIL] No trainer authentication API
+[FAIL] No trainer role in users table
+[FAIL] No trainer-specific permissions
+[FAIL] No retest approval capability for trainers
+[FAIL] No feedback deletion capability for trainers
+
+REQUIRED IMPLEMENTATION:
+- Create Trainer entity and repository
+- Create /api/trainer/login endpoint
+- Create TrainerDashboard with:
+  - Retest requests view
+  - Approve/Reject functionality
+  - Feedback management
+
+================================================================================
+4. ADMIN PANEL
+================================================================================
+
+STATUS: PARTIALLY WORKING
+
+TESTS PERFORMED:
+- Admin dashboard load
+- CRM analytics display
+- Tab navigation (Leads, Sessions, Feedbacks)
+
+FINDINGS:
+
+[PASS] Admin dashboard loads with auth check
+[PASS] CRM Analytics cards show: Students, Tests, Feedbacks, Meetings
+[PASS] Tabs work: Placements & Leads, Recorded Sessions, View Feedbacks
+[PASS] Logout clears localStorage and redirects
+
+[WARN] Analytics fetch uses direct COUNT queries
+[WARN] totalTests returns 0 (test results in MongoDB, not MySQL)
+[WARN] totalMeetings returns 0 (meetings in MongoDB, not MySQL)
+
+[FAIL] No retest requests management panel
+[FAIL] No trainer management panel
+[FAIL] No detailed drill-down analytics
+
+PERFORMANCE:
+- Admin panel loads in ~500ms (acceptable)
+- Uses DTOs, no heavy joins
+
+================================================================================
+5. FEEDBACK SYSTEM
+================================================================================
+
+STATUS: MOSTLY WORKING
+
+TESTS PERFORMED:
+- Submit feedback as student
+- View feedback carousel on home page
+- Check rotation timing
+- Admin feedback deletion
+
+FINDINGS:
+
+[PASS] Feedback saves to MySQL via /api/feedback POST
+[PASS] Carousel fetches from /api/feedback/public
+[PASS] 5-second auto-rotation implemented (setInterval)
+[PASS] 3-card hierarchy with scale/opacity effects
+[PASS] Admin can delete feedback from management page
+
+[WARN] Edge case: < 3 feedbacks may show empty cards
+[WARN] Gender field defaulting to male if not provided
+
+================================================================================
+6. CAREER TEST
+================================================================================
+
+STATUS: CRITICAL ISSUES
+
+TESTS PERFORMED:
+- Start career assessment
+- Answer partial questions
+- Submit test
+- Attempt retest
+
+FINDINGS:
+
+[PASS] 50 questions loaded from API
+[PASS] Progress bar shows completion percentage
+[PASS] Result calculation works (A=Systems, B=Enterprise, C=Automation, D=Intelligence)
+
+[FAIL] NO VALIDATION FOR ALL 50 ANSWERS
+       Location: TestPage.jsx handleSubmit()
+       - Does NOT check if all questions answered
+       - Allows partial submission
+
+[FAIL] NO RETEST BLOCKING
+       - Students can retake test unlimited times
+       - No check for existing test result
+       - No API enforcement
+
+[FAIL] RESULT NOT PERSISTED
+       - Result passed via navigation state only
+       - Not saved to MySQL database
+       - Lost on page refresh
+
+================================================================================
+7. RETEST APPROVAL FLOW
+================================================================================
+
+STATUS: NOT IMPLEMENTED
+
+TESTS PERFORMED:
+- Search for "retest" in codebase
+- Check for retest_requests table
+- Check for approval API
+
+FINDINGS:
+
+[FAIL] retest_requests MySQL table DOES NOT EXIST
+[FAIL] No /api/test/retest/request endpoint
+[FAIL] No admin/trainer approval UI
+[FAIL] No retest approval emails
+[FAIL] No status tracking (PENDING/APPROVED/REJECTED)
+
+grep search for "retest" returned 0 results in entire codebase.
+
+REQUIRED IMPLEMENTATION:
+- CREATE TABLE retest_requests (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    student_id INT NOT NULL,
+    status ENUM('PENDING','APPROVED','REJECTED') DEFAULT 'PENDING',
+    requested_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  )
+- Create RetestRequest entity
+- Create request/approve/reject APIs
+- Add UI for trainer panel
+
+================================================================================
+8. STUDENT CRM
+================================================================================
+
+STATUS: PARTIALLY WORKING
+
+TESTS PERFORMED:
+- View Student CRM page
+- Verify all counts
+
+FINDINGS:
+
+[PASS] Page loads with student info
+[PASS] feedbackCount from MySQL
+[PASS] meetingCount from MongoDB meetings API
+
+[FAIL] resumesCount ALWAYS RETURNS 0
+       - No resume tracking table in MySQL
+       - No integration with Resume Builder
+
+[FAIL] booksReadCount ALWAYS RETURNS 0
+       - No book reading tracking system
+       - No student_books table
+
+[WARN] testGiven/careerTrack from separate API
+       - Not unified in single response
+
+================================================================================
+9. BOOKS / PDF READER
+================================================================================
+
+STATUS: PARTIALLY WORKING
+
+TESTS PERFORMED:
+- Click each book card
+- Verify PDF opens
+- Check domain mapping
+
+FINDINGS:
+
+[PASS] Books page displays 6 book cards
+[PASS] "View PDF" opens in new browser tab
+
+[FAIL] BOOKS ARE HARDCODED
+       Location: BooksPage.jsx lines 8-39
+       - Static array of 6 books
+       - Not fetched from database
+
+[FAIL] NOT DOMAIN-MAPPED
+       - Java student sees same books as Python student
+       - No filtering based on career track
+
+[WARN] EXTERNAL URLs may break
+       - Using prepcrazy.com resource links
+       - No control over availability
+
+[WARN] Not embedded reader
+       - Opens raw PDF in new tab
+       - No in-app PDF viewer
+
+================================================================================
+10. RECORDED SESSIONS
+================================================================================
+
+STATUS: PARTIALLY WORKING
+
+TESTS PERFORMED:
+- View sessions page
+- Admin recorded sessions management
+
+FINDINGS:
+
+[PASS] Sessions page displays videos
+[PASS] Admin can manage recorded sessions
+
+[FAIL] NOT DOMAIN-MAPPED
+       - All students see same sessions
+       - Not filtered by career track
+
+[FAIL] NO TEST RESULT DEPENDENCY
+       - Sessions don't update after test/retest
+       - No mapping to latest approved test
+
+================================================================================
+11. EMAIL & MEETING SYSTEM
+================================================================================
+
+STATUS: NEEDS VERIFICATION
+
+TESTS PERFORMED:
+- Code review of MentorshipPage.jsx
+- Check email configuration
+
+FINDINGS:
+
+[PASS] Meeting scheduling sends email (code exists)
+[PASS] Meeting stored in MongoDB
+
+[NOT VERIFIED] Actual email delivery
+[NOT VERIFIED] Meeting link correctness
+[NOT VERIFIED] Calendar integration
+
+[FAIL] Retest approval emails NOT IMPLEMENTED
+       - No retest system exists
+
+================================================================================
+12. PERFORMANCE ANALYSIS
+================================================================================
+
+ADMIN PANEL:
+- Load time: ~500ms (ACCEPTABLE)
+- Uses DTOs only
+- Uses COUNT(*) queries
+- No heavy joins detected
+
+FRONTEND:
+- Lazy loading implemented for heavy components
+- Suspense fallback shows loader
+
+POTENTIAL BOTTLENECKS:
+- Feedback carousel fetches all feedbacks (no pagination)
+- Sessions page loads all videos at once
+
+================================================================================
+13. PRIORITY FIX RECOMMENDATIONS
+================================================================================
+
+CRITICAL (Must Fix):
+1. Implement retest approval flow (MySQL table, APIs, UI)
+2. Add test validation (all 50 questions required)
+3. Block retest without approval
+4. Persist test results to database
+
+HIGH (Should Fix):
+5. Implement trainer panel with permissions
+6. Domain-map books to career track
+7. Domain-map recorded sessions
+8. Fix resumesCount/booksReadCount = 0
+
+MEDIUM:
+9. Add proper route guards with JWT validation
+10. Handle carousel < 3 feedback edge case
+11. Add auth guard to student routes
+
+LOW:
+12. Embed PDF viewer instead of new tab
+13. Move pamphlet data to database
+
+================================================================================
+END OF PHASE 1 TEST REPORT
+================================================================================

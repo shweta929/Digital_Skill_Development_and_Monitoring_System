@@ -1,0 +1,203 @@
+.student-section-page {
+    min-height: 100vh;
+    background: #f8fafc;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Minimal Header for Student Section */
+.minimal-student-header {
+    background: linear-gradient(90deg, var(--footer-bg-start) 0%, var(--footer-bg-end) 100%);
+    border-bottom: none;
+    padding: 1.25rem 3rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-content-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Student Menu Styles */
+.student-menu-wrapper {
+    position: relative;
+}
+
+.menu-btn {
+    background: #2D3748;
+    border: none;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.menu-btn:hover {
+    background: #1A202C;
+    transform: translateY(-2px);
+}
+
+.hamburger {
+    width: 24px;
+    height: 2px;
+    background: white;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.hamburger::before,
+.hamburger::after {
+    content: '';
+    position: absolute;
+    width: 24px;
+    height: 2px;
+    background: white;
+    left: 0;
+    transition: all 0.3s ease;
+}
+
+.hamburger::before {
+    top: -8px;
+}
+
+.hamburger::after {
+    bottom: -8px;
+}
+
+.menu-btn.active .hamburger {
+    background: transparent;
+}
+
+.menu-btn.active .hamburger::before {
+    transform: rotate(45deg);
+    top: 0;
+}
+
+.menu-btn.active .hamburger::after {
+    transform: rotate(-45deg);
+    bottom: 0;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    width: 200px;
+    overflow: hidden;
+    z-index: 1100;
+    border: 1px solid #e2e8f0;
+    transform-origin: top right;
+    animation: slideDownLeft 0.3s ease-out;
+}
+
+@keyframes slideDownLeft {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.dropdown-item {
+    display: block;
+    padding: 1.2rem 1.5rem;
+    color: #2D3748;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background: #f1f5f9;
+    color: #3182ce;
+    padding-left: 1.8rem;
+}
+
+.amar-logo-minimal {
+    height: 65px;
+    width: auto;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
+}
+
+.student-motivational-msg {
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: #1A365D;
+    letter-spacing: -1.5px;
+    margin: 0;
+    text-shadow: none;
+}
+
+/* Student Dashboard Content */
+.student-dashboard.full-width {
+    padding: 4rem 3rem;
+    position: relative;
+    z-index: 1;
+}
+
+.container-fluid {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.dashboard-grid-section {
+    margin-bottom: 5rem;
+}
+
+.grid-title {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #1A365D;
+    margin-bottom: 2.5rem;
+    padding-left: 1rem;
+    border-left: 6px solid var(--primary-light);
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    /* 4 cards per row */
+    gap: 2.5rem;
+}
+
+/* Responsive Grid */
+@media (max-width: 1200px) {
+    .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .minimal-student-header {
+        padding: 1rem 1.5rem;
+    }
+
+    .student-motivational-msg {
+        display: none;
+        /* Hide on small mobile to avoid crowding */
+    }
+}
+
+@media (max-width: 600px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}

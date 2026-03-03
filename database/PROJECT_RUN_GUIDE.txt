@@ -1,0 +1,342 @@
+================================================================================
+                     CAREER CREDENTIALS - PROJECT RUN GUIDE
+================================================================================
+                     Complete Terminal Commands & Setup Instructions
+================================================================================
+
+This guide provides ALL commands needed to run the Career Credentials project
+with all its components (Frontend, Backend, Admin Backend, AI Backend, Resume Builder).
+
+================================================================================
+PART 1: PREREQUISITES
+================================================================================
+
+Before running, ensure you have:
+  ✅ Node.js v18+ installed
+  ✅ Java JDK 17+ installed
+  ✅ Maven installed
+  ✅ MySQL running on port 3306
+  ✅ MongoDB running on port 27017
+  ✅ .NET SDK 6+ installed (for Resume Builder)
+
+================================================================================
+PART 2: DATABASE SETUP
+================================================================================
+
+MYSQL (Port 3306):
+  Database: career_guidance
+  
+  Tables Required:
+    - students
+    - student_feedback
+    - recorded_sessions
+    - admins
+
+MONGODB (Port 27017):
+  Database: career_guidance
+  
+  Collections Required:
+    - students
+    - meetings
+    - sessions
+    - subjects
+
+================================================================================
+PART 3: TERMINAL COMMANDS BY COMPONENT
+================================================================================
+
+------------------------------------------------------------------------------
+TERMINAL 1: Main Backend (Node.js - Express)
+------------------------------------------------------------------------------
+FOLDER:     D:\Cdac\Career-Portal1\Project_Cdac\backend
+COMMAND:    npm start
+PORT:       5000
+
+DESCRIPTION: Main student-facing API for login, test, meetings, etc.
+
+FULL STEPS:
+  1. Open new terminal (PowerShell or CMD)
+  2. cd D:\Cdac\Career-Portal1\Project_Cdac\backend
+  3. npm install       (first time only)
+  4. npm start
+
+------------------------------------------------------------------------------
+TERMINAL 2: PROJECT AI Backend (Python/Express - Optional)
+------------------------------------------------------------------------------
+FOLDER:     D:\Cdac\Career-Portal1\career-ai-backend
+COMMAND:    uvicorn main:app --reload --port 5001
+PORT:       5001
+
+DESCRIPTION: AI-powered career recommendation engine.
+
+FULL STEPS:
+  1. Open new terminal
+  2. cd D:\Cdac\Career-Portal1\career-ai-backend
+  3. pip install -r requirements.txt   (first time only)
+  4. uvicorn main:app --reload --port 5001
+
+------------------------------------------------------------------------------
+TERMINAL 3: Admin Backend (Spring Boot - Java)
+------------------------------------------------------------------------------
+FOLDER:     D:\Cdac\Career-Portal1\Admin\backend
+COMMAND:    mvn spring-boot:run
+PORT:       8081
+
+DESCRIPTION: Admin APIs for feedback, recorded sessions, subjects (MySQL).
+
+FULL STEPS:
+  1. Open new terminal (PowerShell)
+  2. cd D:\Cdac\Career-Portal1\Admin\backend
+  3. mvn clean install    (first time only)
+  4. mvn spring-boot:run
+
+ALTERNATIVE (using batch file):
+  1. cd D:\Cdac\Career-Portal1\Admin
+  2. cmd /c run_backend.bat
+
+------------------------------------------------------------------------------
+TERMINAL 4: Frontend (React - Vite)
+------------------------------------------------------------------------------
+FOLDER:     D:\Cdac\Career-Portal1\Project_Cdac\frontend
+COMMAND:    npm run dev
+PORT:       5173
+
+DESCRIPTION: Main student/admin UI with all pages.
+
+FULL STEPS:
+  1. Open new terminal
+  2. cd D:\Cdac\Career-Portal1\Project_Cdac\frontend
+  3. npm install       (first time only)
+  4. npm run dev
+
+ACCESS:     http://localhost:5173
+
+------------------------------------------------------------------------------
+TERMINAL 5: Smart Resume Builder - API (.NET)
+------------------------------------------------------------------------------
+FOLDER:     D:\Cdac\Career-Portal1\SmartResumeBuilder\src\ResumeBuilder.API\ResumeBuilder.API
+COMMAND:    dotnet run
+PORT:       5001
+
+DESCRIPTION: Resume generation PDF API.
+
+FULL STEPS:
+  1. Open new terminal
+  2. cd D:\Cdac\Career-Portal1\SmartResumeBuilder\src\ResumeBuilder.API\ResumeBuilder.API
+  3. dotnet restore    (first time only)
+  4. dotnet run
+
+------------------------------------------------------------------------------
+TERMINAL 6: Smart Resume Builder - Web (.NET)
+------------------------------------------------------------------------------
+FOLDER:     D:\Cdac\Career-Portal1\SmartResumeBuilder\src\ResumeBuilder.Web\ResumeBuilder.Web
+COMMAND:    dotnet run
+PORT:       5002
+
+DESCRIPTION: Resume Builder frontend interface.
+
+FULL STEPS:
+  1. Open new terminal
+  2. cd D:\Cdac\Career-Portal1\SmartResumeBuilder\src\ResumeBuilder.Web\ResumeBuilder.Web
+  3. dotnet restore    (first time only)
+  4. dotnet run
+
+ACCESS:     http://localhost:5002
+
+================================================================================
+PART 4: QUICK START - ALL SERVICES AT ONCE
+================================================================================
+
+Open 6 SEPARATE terminals and run these commands:
+
+TERMINAL 1 (Main Backend):
+  cd D:\Cdac\Career-Portal1\Project_Cdac\backend && npm start
+
+TERMINAL 2 (AI Backend - Optional):
+  cd D:\Cdac\Career-Portal1\career-ai-backend && uvicorn main:app --reload --port 5001
+
+TERMINAL 3 (Admin Backend):
+  cd D:\Cdac\Career-Portal1\Admin\backend && mvn spring-boot:run
+
+TERMINAL 4 (Frontend):
+  cd D:\Cdac\Career-Portal1\Project_Cdac\frontend && npm run dev
+
+TERMINAL 5 (Resume API):
+  cd D:\Cdac\Career-Portal1\SmartResumeBuilder\src\ResumeBuilder.API\ResumeBuilder.API && dotnet run
+
+TERMINAL 6 (Resume Web):
+  cd D:\Cdac\Career-Portal1\SmartResumeBuilder\src\ResumeBuilder.Web\ResumeBuilder.Web && dotnet run
+
+================================================================================
+PART 5: PORT SUMMARY
+================================================================================
+
+| Service              | Port  | URL                                |
+|----------------------|-------|------------------------------------|
+| Main Backend         | 5000  | http://localhost:5000/api          |
+| AI Backend           | 5001  | http://localhost:5001              |
+| Admin Backend        | 8081  | http://localhost:8081/api          |
+| Frontend             | 5173  | http://localhost:5173              |
+| Resume Builder API   | 5001  | http://localhost:5001              |
+| Resume Builder Web   | 5002  | http://localhost:5002              |
+| MySQL                | 3306  | -                                  |
+| MongoDB              | 27017 | -                                  |
+
+================================================================================
+PART 6: KEY PAGES & ROUTES
+================================================================================
+
+STUDENT PAGES:
+  - Login:              http://localhost:5173/login
+  - Register:           http://localhost:5173/register
+  - Dashboard:          http://localhost:5173/student-dashboard
+  - Career Test:        http://localhost:5173/test
+  - 1-on-1 Meeting:     http://localhost:5173/one-on-one
+  - Feedback:           http://localhost:5173/feedback
+  - Student CRM:        http://localhost:5173/student-crm
+  - Resume Builder:     http://localhost:5002 (external)
+
+ADMIN PAGES:
+  - Admin Login:        http://localhost:5173/admin-login
+  - Admin Dashboard:    http://localhost:5173/admin-dashboard
+  - Feedback Mgmt:      http://localhost:5173/admin-feedbacks
+
+PUBLIC PAGES:
+  - Home:               http://localhost:5173/
+  - About:              http://localhost:5173/about
+  - Contact:            http://localhost:5173/contact
+
+================================================================================
+PART 7: TROUBLESHOOTING
+================================================================================
+
+ISSUE: Port already in use
+  SOLUTION: Kill existing process or change port in config
+
+ISSUE: npm start fails
+  SOLUTION: Delete node_modules and run npm install again
+
+ISSUE: Maven build fails
+  SOLUTION: Run mvn clean install -DskipTests
+
+ISSUE: MySQL connection error
+  SOLUTION: Verify MySQL is running and credentials in application.properties
+
+ISSUE: MongoDB connection error
+  SOLUTION: Verify MongoDB is running on port 27017
+
+ISSUE: Feedback carousel not showing
+  SOLUTION: Ensure Admin Backend (8081) is running and has feedback data
+
+================================================================================
+PART 8: ENVIRONMENT VARIABLES
+================================================================================
+
+Main Backend (.env):
+  MONGO_URI=mongodb://localhost:27017/career_guidance
+  JWT_SECRET=your_secret_key
+  ADMIN_EMAIL=admin@example.com
+
+Admin Backend (application.properties):
+  spring.datasource.url=jdbc:mysql://localhost:3306/career_guidance
+  spring.datasource.username=root
+  spring.datasource.password=your_password
+
+================================================================================
+PART 9: TRAINER REGISTRATION & LOGIN
+================================================================================
+
+The Trainer panel is separate from Admin and Student. Trainers can:
+  - View pending retest requests
+  - Approve or reject retest requests
+  - Manage student career assessments
+
+------------------------------------------------------------------------------
+STEP 1: ENSURE ADMIN BACKEND IS RUNNING
+------------------------------------------------------------------------------
+  cd D:\Cdac\Career-Portal1\Admin\backend
+  mvn spring-boot:run
+
+  Wait for: "Started AdminApplication" in terminal output
+
+------------------------------------------------------------------------------
+STEP 2: REGISTER TRAINER (admin1) - Using PowerShell
+------------------------------------------------------------------------------
+  Open a NEW PowerShell terminal and run:
+
+  Invoke-RestMethod -Method Post -Uri "http://localhost:8081/api/trainer/register" -ContentType "application/json" -Body '{"fullName":"admin1","email":"admin1@credentials.com","password":"Admin@123","specialization":"Career Counseling"}'
+
+  EXPECTED RESPONSE:
+  {
+    "success": true,
+    "message": "Trainer registered successfully"
+  }
+
+------------------------------------------------------------------------------
+STEP 2 (ALTERNATIVE): REGISTER TRAINER - Using MySQL Directly
+------------------------------------------------------------------------------
+  Open MySQL Workbench or command line and run:
+
+  INSERT INTO trainer (full_name, email, password_hash, specialization, status, created_at) 
+  VALUES (
+      'admin1',
+      'admin1@credentials.com',
+      '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy',
+      'Career Counseling',
+      'ACTIVE',
+      NOW()
+  );
+
+  NOTE: The password_hash above is BCrypt hash of "Admin@123"
+
+------------------------------------------------------------------------------
+STEP 2 (ALTERNATIVE): REGISTER TRAINER - Using Postman
+------------------------------------------------------------------------------
+  1. Open Postman (download from https://www.postman.com/downloads/)
+  2. Create new request:
+     - Method: POST
+     - URL: http://localhost:8081/api/trainer/register
+     - Body → Raw → JSON:
+       {
+         "fullName": "admin1",
+         "email": "admin1@credentials.com",
+         "password": "Admin@123",
+         "specialization": "Career Counseling"
+       }
+  3. Click "Send"
+
+------------------------------------------------------------------------------
+STEP 3: LOGIN AS TRAINER
+------------------------------------------------------------------------------
+  1. Open browser: http://localhost:5173/trainer-login
+  2. Enter credentials:
+     - Email:    admin1@credentials.com
+     - Password: Admin@123
+  3. Click "Login as Trainer"
+  4. You will be redirected to the Trainer Dashboard
+
+------------------------------------------------------------------------------
+TRAINER DASHBOARD FEATURES
+------------------------------------------------------------------------------
+  After login, trainers can:
+  
+  ✅ View all pending retest requests
+  ✅ Approve retest requests (allows student to retake career test)
+  ✅ Reject retest requests
+  ✅ See pending request count
+
+  URL: http://localhost:5173/trainer-dashboard
+
+================================================================================
+PART 10: ALL LOGIN CREDENTIALS SUMMARY
+================================================================================
+
+| Role     | Login URL                           | Email                      | Password    |
+|----------|-------------------------------------|----------------------------|-------------|
+| Student  | http://localhost:5173/login         | (register new account)     | -           |
+| Trainer  | http://localhost:5173/trainer-login | admin1@credentials.com     | Admin@123   |
+| Admin    | http://localhost:5173/admin-login   | admin@example.com          | (configured)|
+
+================================================================================
+                              END OF GUIDE
+================================================================================

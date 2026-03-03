@@ -1,0 +1,128 @@
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import https from 'https';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import nodemailer from 'nodemailer';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+dotenv.config({ path: path.resolve(__dirname, '../.env') }); // Load backend/.env
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+const PORT = 8080;
+const GROQ_API_KEY = process.env.GROQ_API_KEY;
+
+// Helper for Groq API
+async function askGroq(prompt) {
+    return new Promise((resolve, reject) => {
+        const data = JSON.stringify({
+            model: "llama-3.1-8b-instant",
+            messages: [
+                { role: "system", content: "You are a professional career counselor. Provide a clear, detailed, and encouraging response." },
+                { role: "user", content: prompt }
+            ],
+            temperature: 0.7,
+            max_tokens: 2048
+        });
+
+        const options = {
+            hostname: 'api.groq.com',
+            path: '/openai/v1/chat/completions',
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${GROQ_API_KEY}`,
+                'Content-Type': 'application/json',
+                'Content-Length': Buffer.byteLength(data)
+            }
+        };
+
+        const req = https.request(options, (res) => {
+            let body = '';
+            res.on('data', (d) => body += d);
+            res.on('end', () => {
+                try {
+                    const json = JSON.parse(body);
+                    if (json.choices && json.choices[0]) {
+                        resolve(json.choices[0].message.content);
+                    } else {
+                        console.error("[Groq] Raw Body:", body);
+                        reject(new Error(json.error?.message || "Invalid AI response from Groq"));
+                    }
+                } catch (e) {
+                    console.error("[Groq] JSON Parse Error. Raw Body:", body);
+                    reject(new Error("Failed to parse AI response."));
+                }
+            });
+        });
+
+        req.on('error', reject);
+        req.write(data);
+        req.end();
+    });
+}
+
+// 1. Ask AI Endpoint
+app.post('/api/ai/ask', async (req, res) => {
+    try {
+        const { question } = req.body;
+        if (!question) return res.status(400).json({ error: "Question is required" });
+
+        console.log(`[AI] Processing: ${question.substring(0, 50)}...`);
+        const answer = await askGroq(question);
+        res.json({ answer });
+    } catch (err) {
+        console.error("AI Error:", err.message);
+        res.status(500).json({ error: "AI service failed: " + err.message });
+    }
+});
+
+// 2. Email Roadmap Endpoint
+app.post('/api/ai/email-roadmap', async (req, res) => {
+    try {
+        const { name, email, roadmap } = req.body;
+        if (!email || !roadmap) return res.status(400).json({ error: "Email and roadmap are required" });
+
+        console.log(`[AI] Emailing roadmap to ${email} for ${name}`);
+
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS
+            }
+        });
+
+        const mailOptions = {
+            from: `"Career AI" <${process.env.EMAIL_USER}>`,
+            to: email,
+            subject: `🚀 Your Personalized Career Roadmap: ${name}`,
+            text: `Hello ${name},\n\nHere is your requested career roadmap:\n\n${roadmap}\n\nBest regards,\nCareer Credentials Team`,
+            html: `<h3>Hello ${name},</h3>
+                   <p>Here is your requested career roadmap:</p>
+                   <div style="background: #f4f4f4; padding: 20px; border-radius: 10px; white-space: pre-wrap; font-family: sans-serif;">
+                     ${roadmap.replace(/\n/g, '<br>')}
+                   </div>
+                   <p>Best regards,<br><b>Career Credentials Team</b></p>`
+        };
+
+        await transporter.sendMail(mailOptions);
+        res.json({ message: "Roadmap sent to " + email });
+    } catch (err) {
+        console.error("❌ Email Error details:", err);
+        res.status(500).json({
+            error: "Failed to send email: " + err.message,
+            stack: err.stack
+        });
+    }
+});
+
+app.listen(PORT, () => {
+    console.log(`🚀 AI Microservice running on http://localhost:${PORT}`);
+    console.log(`🔑 Groq API Key present: ${GROQ_API_KEY ? 'YES' : 'NO'}`);
+});

@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Trainer Dashboard</title>
+
+    <!-- Calendly -->
+    <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background: #f0f4f8;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1a73e8, #0d47a1);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        .trainer-info {
+            padding: 20px;
+            background: #eef2ff;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            text-align: center;
+            border: 1px solid #e0e7ff;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            background: #1a73e8;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background: #1558b0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
+        }
+
+        .btn-danger {
+            background: #ef4444;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-success {
+            background: #10b981;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .meeting-card {
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            background: #ffffff;
+            transition: all 0.3s ease;
+        }
+
+        .meeting-card:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .meeting-card h3 {
+            margin: 0 0 10px 0;
+            color: #1e3a8a;
+        }
+
+        .approve-box {
+            margin-top: 15px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        input,
+        select {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            outline: none;
+            font-size: 14px;
+        }
+
+        hr {
+            margin: 40px 0;
+            border: 0;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .calendar-section {
+            margin-bottom: 35px;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+            background: white;
+        }
+
+        .calendar-header {
+            background: #f8fafc;
+            padding: 16px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .calendar-header:hover {
+            background: #f1f5f9;
+        }
+
+        .calendar-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
+        }
+
+        .calendar-body.open {
+            max-height: 1000px;
+            transition: max-height 1s ease-in-out;
+        }
+
+        .calendly-inline-widget {
+            height: 600px;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h2>Trainer Portal</h2>
+        <p>Manage your one-on-one sessions and availability</p>
+    </header>
+
+    <section class="container">
+
+        <!-- Trainer Info -->
+        <section id="trainerDetails" class="trainer-info">
+            <div class="spinner">Loading trainer info...</div>
+        </section>
+
+        <!-- Calendar Section -->
+        <div class="calendar-section">
+            <div class="calendar-header" onclick="toggleCalendar()">
+                <span>📅 Your Availability Calendar (Calendly)</span>
+                <span id="calendarArrow" style="transition: transform 0.3s">▼</span>
+            </div>
+
+            <div id="calendarBody" class="calendar-body">
+                <div class="calendly-inline-widget"
+                    data-url="https://calendly.com/amar-careercredentials/30min?hide_event_type_details=1&hide_gdpr_banner=1">
+                </div>
+            </div>
+        </div>
+
+        <div id="requestList">
+            <p style="text-align: center; color: #64748b;">Loading meeting requests...</p>
+        </div>
+
+    </section>
+
+    <script>
+        async function loadTrainerInfo() {
+            try {
+                const res = await fetch("/api/trainers");
+                const trainers = await res.json();
+                const trainer = trainers[0];
+
+                document.getElementById("trainerDetails").innerHTML = `
+          <h3 style="margin-top:0">Welcome back, ${trainer?.name || "Dr. Amar Panchal"}</h3>
+          <p style="color: #64748b; margin-bottom: 20px;">Email: <strong>${trainer?.email || "amar@careercredentials.org"}</strong></p>
+
+          <a href="/auth/google" class="btn">
+            Connect Google Calendar
+          </a>
+
+          <p style="font-size:12px; color:#94a3b8; margin-top:12px;">
+            Connection is required to generate Google Meet links automatically.
+          </p>
+        `;
+            } catch (e) {
+                document.getElementById("trainerDetails").innerHTML = "<p>Error loading trainer details.</p>";
+            }
+        }
+
+        function convertToAmPm(time24, ampm) {
+            let [h, m] = time24.split(":").map(Number);
+            let hour = h % 12 || 12;
+            return `${hour}:${m.toString().padStart(2, "0")} ${ampm}`;
+        }
+
+        async function loadRequests() {
+            try {
+                const res = await fetch("/api/meetings/list");
+                const meetings = await res.json();
+                const container = document.getElementById("requestList");
+                container.innerHTML = "";
+
+                const pending = meetings.filter(m => m.status === "Pending");
+                const approved = meetings.filter(m => m.status === "Approved");
+
+                container.innerHTML += `<h3 style="color:#1e40af; border-bottom: 2px solid #eef2ff; padding-bottom: 10px; margin-top: 0;">Pending Requests</h3>`;
+                if (!pending.length) container.innerHTML += "<p style='color: #94a3b8; padding: 20px; text-align: center;'>No pending requests at the moment.</p>";
+
+                pending.forEach(m => {
+                    container.innerHTML += `
+            <div class="meeting-card">
+              <h3>${m.studentId?.name || 'Student'}</h3>
+              <p style="color: #64748b; margin-bottom: 5px;">Email: <strong>${m.studentId?.email}</strong></p>
+              ${m.note ? `<p style="font-style: italic; color: #4b5563; background: #f8fafc; padding: 8px; border-radius: 4px;">Note: ${m.note}</p>` : ''}
+
+              <div class="approve-box">
+                <input type="date" id="date-${m._id}">
+                <input type="time" id="time-${m._id}">
+                <select id="ampm-${m._id}">
+                  <option>AM</option><option>PM</option>
+                </select>
+
+                <button class="btn" onclick="approve('${m._id}')">Approve & Send Meet Link</button>
+                <button class="btn btn-danger" onclick="reject('${m._id}')">Decline</button>
+              </div>
+            </div>`;
+                });
+
+                container.innerHTML += `<hr/><h3 style="color:#065f46; border-bottom: 2px solid #ecfdf5; padding-bottom: 10px;">Approved Meetings</h3>`;
+                if (!approved.length) container.innerHTML += "<p style='color: #94a3b8; padding: 20px; text-align: center;'>No approved meetings scheduled.</p>";
+
+                approved.forEach(m => {
+                    container.innerHTML += `
+            <div class="meeting-card" style="border-left: 4px solid #10b981;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div>
+                  <h3>${m.studentId?.name || 'Student'}</h3>
+                  <p><strong>Scheduled For:</strong> ${m.finalDate}</p>
+                  <p><strong>Meet Link:</strong> <a href="${m.meetLink}" target="_blank" style="color: #2563eb;">Join Meeting</a></p>
+                </div>
+                <div style="background: #ecfdf5; color: #065f46; padding: 4px 12px; border-radius: 99px; font-size: 12px; font-weight: bold;">
+                  Approved
+                </div>
+              </div>
+
+              <div class="approve-box">
+                <input type="date" id="newdate-${m._id}">
+                <input type="time" id="newtime-${m._id}">
+                <select id="newampm-${m._id}">
+                  <option>AM</option><option>PM</option>
+                </select>
+
+                <button class="btn btn-success" onclick="reschedule('${m._id}')">Update Date</button>
+                <button class="btn btn-danger" onclick="reject('${m._id}')">Cancel Session</button>
+              </div>
+            </div>`;
+                });
+            } catch (e) {
+                document.getElementById("requestList").innerHTML = "<p>Failed to load meetings.</p>";
+            }
+        }
+
+        function toggleCalendar() {
+            const body = document.getElementById("calendarBody");
+            const arrow = document.getElementById("calendarArrow");
+            body.classList.toggle("open");
+            arrow.style.transform = body.classList.contains("open") ? "rotate(180deg)" : "rotate(0deg)";
+        }
+
+        async function approve(meetingId) {
+            const date = document.getElementById(`date-${meetingId}`).value;
+            const time = document.getElementById(`time-${meetingId}`).value;
+            const ampm = document.getElementById(`ampm-${meetingId}`).value;
+
+            if (!date || !time) return alert("Please select date and time");
+
+            const formattedTime = convertToAmPm(time, ampm);
+            const finalDate = `${date} at ${formattedTime}`;
+
+            try {
+                const res = await fetch("/api/meetings/approve", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ meetingId, finalDate }),
+                });
+                const data = await res.json();
+                if (data.error) alert("Error: " + data.error);
+                else {
+                    alert("✅ Meeting Approved! Email sent to student.");
+                    loadRequests();
+                }
+            } catch (err) {
+                alert("Failed to communicate with server");
+            }
+        }
+
+        async function reject(meetingId) {
+            if (!confirm("Are you sure? This will remove the request.")) return;
+
+            try {
+                const res = await fetch("/api/meetings/reject", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ meetingId }),
+                });
+                const data = await res.json();
+                if (data.error) alert(data.error);
+                else {
+                    alert("✅ Meeting Removed.");
+                    loadRequests();
+                }
+            } catch (err) {
+                alert("Failed to remove");
+            }
+        }
+
+        async function reschedule(meetingId) {
+            const date = document.getElementById(`newdate-${meetingId}`).value;
+            const time = document.getElementById(`newtime-${meetingId}`).value;
+            const ampm = document.getElementById(`newampm-${meetingId}`).value;
+
+            if (!date || !time) return alert("Please select new date and time");
+
+            const formattedTime = convertToAmPm(time, ampm);
+            const newFinalDate = `${date} at ${formattedTime}`;
+
+            try {
+                const res = await fetch("/api/meetings/reschedule", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ meetingId, newFinalDate }),
+                });
+                const data = await res.json();
+                if (data.error) alert(data.error);
+                else {
+                    alert("✅ Date updated successfully.");
+                    loadRequests();
+                }
+            } catch (err) {
+                alert("Failed to update");
+            }
+        }
+
+        loadTrainerInfo();
+        loadRequests();
+    </script>
+
+</body>
+
+</html>

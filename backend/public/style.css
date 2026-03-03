@@ -1,0 +1,91 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f5f5f5;
+}
+
+header {
+    background: #1a73e8;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+}
+
+h2 {
+    margin: 0;
+}
+
+.container {
+    max-width: 500px;
+    /* Slightly narrower for a form card look */
+    margin: 50px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    /* Align labels and inputs to the left */
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    margin-top: 15px;
+    display: block;
+    color: #333;
+}
+
+label:first-child {
+    margin-top: 0;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    /* Ensure padding doesn't affect width */
+    font-size: 14px;
+}
+
+input:focus {
+    border-color: #1a73e8;
+    outline: none;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #1a73e8;
+    color: white;
+    text-decoration: none;
+    /* useful if <a> */
+    border: none;
+    /* useful if <button> */
+    border-radius: 5px;
+    margin-top: 25px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    width: 100%;
+    /* Make button full width for the card */
+}
+
+.btn:hover {
+    background: #1558b0;
+}
+
+#msg {
+    margin-top: 20px;
+    text-align: center;
+    font-weight: bold;
+    color: #333;
+}

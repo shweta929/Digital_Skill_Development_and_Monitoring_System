@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Career Test</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <header>
+    <h2>Career Test (Sample Demo)</h2>
+  </header>
+
+  <section class="container">
+    <form id="testForm">
+      <p>Answer this sample question (your real app will have 50 questions)</p>
+
+      <label>Your Name</label>
+      <input type="text" name="name" required />
+
+      <label>Your Email</label>
+      <input type="email" name="email" required />
+
+      <label>Do you like solving logical problems?</label>
+      <select name="q1" required>
+        <option value="">Select</option>
+        <option value="Software Development">Yes — I prefer logical/technical work</option>
+        <option value="Design / Creative">No — I prefer creative work</option>
+      </select>
+
+      <button type="submit" class="btn">Submit Test</button>
+    </form>
+
+    <p id="msg"></p>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,235 @@
+.welcome-page {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #FFFFFF;
+    position: relative;
+    padding-top: 2rem;
+}
+
+.hero-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+    width: 100%;
+}
+
+.hero-content {
+    text-align: left;
+}
+
+.hero-heading {
+    font-size: 5rem;
+    line-height: 1.05;
+    color: #1A365D;
+    font-weight: 900;
+    letter-spacing: -3px;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    transform: translateX(-30px);
+    animation: fadeInRight 0.8s ease forwards 0.2s;
+}
+
+.hero-brand-highlight {
+    background: linear-gradient(135deg, #2D3748 0%, #3182ce 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-description {
+    font-size: 1.35rem;
+    line-height: 1.7;
+    color: #4A5568;
+    max-width: 580px;
+    margin-bottom: 3.5rem;
+    font-weight: 500;
+    opacity: 0;
+    transform: translateX(-30px);
+    animation: fadeInRight 0.8s ease forwards 0.4s;
+}
+
+.hero-actions {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s ease forwards 0.6s;
+}
+
+.btn-hero-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.25rem 3.5rem;
+    background: #1A365D;
+    color: white;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: 700;
+    border-radius: 20px;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    box-shadow: 0 10px 35px rgba(26, 54, 93, 0.25);
+}
+
+.btn-hero-primary:hover {
+    transform: translateY(-8px) scale(1.02);
+    background: #2D3748;
+    box-shadow: 0 20px 50px rgba(26, 54, 93, 0.35);
+}
+
+.btn-hero-primary .arrow {
+    font-size: 1.5rem;
+    transition: transform 0.3s ease;
+}
+
+.btn-hero-primary:hover .arrow {
+    transform: translateX(8px);
+}
+
+/* Visual Section */
+.hero-visual {
+    position: relative;
+    height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 1000px;
+}
+
+.abstract-card {
+    width: 400px;
+    height: 480px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 100%);
+    backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 40px;
+    transform: rotateY(-15deg) rotateX(10deg);
+    box-shadow: 40px 60px 100px rgba(0, 0, 0, 0.1);
+    animation: float 6s ease-in-out infinite alternate;
+}
+
+.glass-inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    padding: 3rem;
+    overflow: hidden;
+}
+
+.dot-pattern {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    height: 300px;
+    background-image: radial-gradient(rgba(45, 55, 72, 0.1) 2px, transparent 2px);
+    background-size: 20px 20px;
+    transform: translate(-50%, -50%);
+}
+
+.stat-pill {
+    position: absolute;
+    bottom: 3rem;
+    left: 2rem;
+    background: white;
+    padding: 1rem 1.8rem;
+    border-radius: 20px;
+    font-weight: 800;
+    color: #1A365D;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    font-size: 0.9rem;
+}
+
+@keyframes fadeInRight {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes float {
+    from {
+        transform: rotateY(-15deg) rotateX(10deg) translateY(0);
+    }
+
+    to {
+        transform: rotateY(-12deg) rotateX(8deg) translateY(-25px);
+    }
+}
+
+@media (max-width: 1200px) {
+    .hero-heading {
+        font-size: 4rem;
+    }
+
+    .hero-container {
+        grid-template-columns: 1.2fr 0.8fr;
+    }
+}
+
+@media (max-width: 992px) {
+    .welcome-page {
+        padding: 4rem 5%;
+    }
+
+    .hero-container {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 6rem;
+    }
+
+    .hero-content {
+        text-align: center;
+    }
+
+    .hero-description {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .hero-visual {
+        height: 400px;
+    }
+}
+
+.welcome-courses-section {
+    padding: 6rem 5%;
+    background: #FFFFFF;
+}
+
+.container-welcome {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #1A365D;
+    text-align: center;
+    margin-bottom: 4rem;
+    letter-spacing: -1px;
+}
+
+.course-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2.5rem;
+}
+
+@media (max-width: 768px) {
+    .section-title {
+        font-size: 2rem;
+    }
+}

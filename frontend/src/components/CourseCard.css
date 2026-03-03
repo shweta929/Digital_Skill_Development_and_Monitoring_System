@@ -1,0 +1,212 @@
+.course-card {
+    background: white;
+    padding: 2.5rem 2rem;
+    width: 100%;
+    min-height: 420px;
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(126, 219, 212, 0.15);
+    cursor: pointer;
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.course-card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 25px 50px rgba(126, 219, 212, 0.3);
+    border-color: var(--primary-light);
+}
+
+.card-image-wrapper {
+    width: 80px;
+    height: 80px;
+    background: rgba(126, 219, 212, 0.08);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.5s ease;
+    overflow: hidden;
+    padding: 15px;
+}
+
+.course-card:hover .card-image-wrapper {
+    background: var(--primary-light);
+    transform: scale(1.1) rotate(5deg);
+}
+
+.course-image-small {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    z-index: 2;
+}
+
+.course-card h3 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #1A365D;
+    text-align: center;
+    margin: 0;
+}
+
+.course-description {
+    font-size: 0.95rem;
+    color: #718096;
+    line-height: 1.6;
+    text-align: center;
+    margin: 0;
+    opacity: 0.8;
+    transition: opacity 0.4s ease;
+}
+
+.course-card:hover .course-description {
+    opacity: 1;
+    color: #4A5568;
+}
+
+.btn-get-started {
+    margin-top: 1rem;
+    padding: 0.8rem 1.8rem;
+    background: #2D3748;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    width: fit-content;
+}
+
+.arrow {
+    transition: transform 0.3s ease;
+}
+
+.course-card:hover .btn-get-started {
+    background: var(--primary-light);
+    color: #2D3748;
+    transform: scale(1.05);
+}
+
+.course-card:hover .arrow {
+    transform: translateX(5px);
+}
+
+.card-hover-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at top right, rgba(126, 219, 212, 0.15), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.course-card:hover .card-hover-bg {
+    opacity: 1;
+}
+
+.course-card.informational {
+    cursor: default;
+    min-height: auto;
+}
+
+.course-card.informational:hover {
+    transform: translateY(-8px);
+}
+
+.course-basic-info {
+    width: 100%;
+    margin-top: 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+    padding: 1.2rem;
+    background: rgba(126, 219, 212, 0.05);
+    border-radius: 16px;
+    border: 1px solid rgba(126, 219, 212, 0.1);
+}
+
+.info-item {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    align-items: center;
+    font-size: 0.85rem;
+    text-align: left;
+}
+
+.info-label {
+    color: #718096;
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-value {
+    color: #1A365D;
+    font-weight: 700;
+    padding-left: 0.5rem;
+}
+
+/* =========================================================
+   DARK THEME OVERRIDES
+   ========================================================= */
+body.dark-theme .course-card {
+    background: var(--card-bg);
+    border-color: var(--border-color);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-theme .course-card h3 {
+    color: var(--text-primary);
+}
+
+body.dark-theme .course-description {
+    color: var(--text-secondary);
+}
+
+body.dark-theme .course-card:hover .course-description {
+    color: var(--text-primary);
+}
+
+body.dark-theme .course-basic-info {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+body.dark-theme .info-label {
+    color: var(--text-secondary);
+}
+
+body.dark-theme .info-value {
+    color: var(--text-primary);
+}
+
+body.dark-theme .btn-get-started {
+    background: #334155;
+    color: #f8fafc;
+}
+
+body.dark-theme .course-card:hover .btn-get-started {
+    background: var(--primary-light);
+    color: #1a202c;
+}

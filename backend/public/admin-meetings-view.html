@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Trainer Dashboard</title>
+
+    <!-- Calendly Script -->
+    <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #f5f6fa;
+            margin: 0;
+            padding: 0;
+            font-size: 16px;
+            /* Base font size increased */
+        }
+
+        /* HEADER REMOVED FOR ADMIN DASHBOARD INTEGRATION */
+        /*
+        header {
+            background: #1a73e8;
+            color: white;
+            padding: 16px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        */
+
+        .container {
+            max-width: 1400px;
+            /* Increased to fill more space */
+            margin: 20px auto;
+            background: white;
+            padding: 25px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        h3 {
+            color: #198754;
+            margin-bottom: 20px;
+            font-size: 24px;
+            /* Larger heading */
+        }
+
+        .meeting-card {
+            border: 1px solid #dcdcdc;
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 18px;
+            background: #fafafa;
+        }
+
+        .meeting-card h4 {
+            margin: 0 0 10px;
+            color: #1a73e8;
+            font-size: 20px;
+            /* Larger card title */
+        }
+
+        .meeting-card p {
+            margin: 6px 0;
+            font-size: 16px;
+            /* Larger text */
+        }
+
+        .meeting-card a {
+            color: #1a73e8;
+            text-decoration: none;
+            word-break: break-all;
+        }
+
+        .controls {
+            margin-top: 12px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        input[type="date"],
+        input[type="time"],
+        select {
+            padding: 10px 12px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 15px;
+            /* Larger inputs */
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+            /* Larger buttons */
+            font-weight: bold;
+            color: white;
+        }
+
+        .btn-reschedule {
+            background: #198754;
+        }
+
+        .btn-reschedule:hover {
+            background: #157347;
+        }
+
+        .btn-remove {
+            background: #dc3545;
+        }
+
+        .btn-remove:hover {
+            background: #bb2d3b;
+        }
+
+        /* Additional style for Pending header if needed */
+        h3.pending-header {
+            color: #1a73e8;
+        }
+
+        /* ================= Calendar Section Styles ================= */
+        .calendar-section {
+            margin-bottom: 35px;
+            border-radius: 14px;
+            border: 1px solid #cce0ff;
+            overflow: hidden;
+        }
+
+        .calendar-header {
+            background: #e8f0fe;
+            padding: 14px 18px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            color: #1a73e8;
+        }
+
+        .calendar-header:hover {
+            background: #dbe7fd;
+        }
+
+        .calendar-toggle {
+            font-size: 18px;
+            transition: transform 0.3s ease;
+        }
+
+        .calendar-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+            background: white;
+        }
+
+        .calendar-body.open {
+            max-height: 500px;
+            /* Increased to fit larger calendar */
+        }
+
+        .calendly-inline-widget {
+            height: 360px;
+            /* Increased height for better visibility */
+            width: 100%;
+            /* Ensure full width usage */
+            border-radius: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header Removed -->
+
+    <section class="container">
+
+        <!-- Trainer Info (Preserved) -->
+        <div id="trainerDetails" style="margin-bottom: 20px; text-align:center;"></div>
+
+        <!-- ================= Calendar Section (Restored) ================= -->
+        <div class="calendar-section">
+            <div class="calendar-header" onclick="toggleCalendar()">
+                <span>📅 Trainer Availability Calendar</span>
+                <span id="calendarArrow" class="calendar-toggle">▼</span>
+            </div>
+
+            <div id="calendarBody" class="calendar-body">
+                <div class="calendly-inline-widget"
+                    data-url="https://calendly.com/amar-careercredentials/30min?hide_event_type_details=1&hide_gdpr_banner=1"
+                    style="min-width:320px;">
+                </div>
+            </div>
+        </div>
+
+        <div id="requestList">
+            <p>Loading...</p>
+        </div>
+
+    </section>
+
+    <script>
+        // 1. Load Trainer Info
+        async function loadTrainerInfo() {
+            try {
+                const res = await fetch("/api/trainers");
+                const trainers = await res.json();
+                // Provide a default if no trainer found, or use the first one
+                const trainer = (trainers && trainers.length) ? trainers[0] : { name: "Dr. Amar Panchal", email: "-" };
+
+                document.getElementById("trainerDetails").innerHTML = `
+        <div style="background:#e8f0fe; padding:15px; border-radius:10px; display:inline-block;">
+            <b>${trainer.name}</b> (${trainer.email}) <br/>
+            <a href="/auth/google" style="color:#1a73e8; font-size:13px; text-decoration:none;">
+               Click to Connect Google Calendar (If not connected)
+            </a>
+        </div>
+      `;
+            } catch (e) {
+                console.log("Error loading trainer info", e);
+            }
+        }
+
+        function convertToAmPm(time24, ampm) {
+            let [h, m] = time24.split(":").map(Number);
+            let hour = h % 12 || 12;
+            return `${hour}:${m.toString().padStart(2, "0")} ${ampm}`;
+        }
+
+        // 2. Load Requests & Render with NEW STYLES
+        async function loadRequests() {
+            try {
+                const res = await fetch("/api/meetings/list");
+                const meetings = await res.json();
+                const container = document.getElementById("requestList");
+                container.innerHTML = "";
+
+                const pending = meetings.filter(m => m.status === "Pending");
+                const approved = meetings.filter(m => m.status === "Approved");
+
+                // --- PENDING SECTION ---
+                if (pending.length > 0) {
+                    container.innerHTML += `<h3 class="pending-header">Pending Requests</h3>`;
+                    pending.forEach(m => {
+                        container.innerHTML += `
+          <div class="meeting-card">
+            <h4>Student: ${m.studentId?.name || "Unknown"}</h4>
+            <p>Email: ${m.studentId?.email || "-"}</p>
+            <p><b>Requested Date:</b> ${m.requestedDate ? new Date(m.requestedDate).toLocaleString() : "Anytime"}</p>
+            ${m.note ? `<p>Note: ${m.note}</p>` : ""}
+
+            <div class="controls">
+              <input type="date" id="date-${m._id}">
+              <input type="time" id="time-${m._id}">
+              <select id="ampm-${m._id}">
+                <option>AM</option><option>PM</option>
+              </select>
+
+              <button class="btn btn-reschedule" onclick="approve('${m._id}')">Reschedule</button>
+              <button class="btn btn-remove" onclick="reject('${m._id}')">Reject</button>
+            </div>
+          </div>`;
+                    });
+                } else {
+                    container.innerHTML += `<h3 class="pending-header">Pending Requests</h3><p>No pending requests.</p>`;
+                }
+
+                // --- APPROVED SECTION ---
+                container.innerHTML += `<hr style="border:0; border-top:1px solid #eee; margin:20px 0;">`;
+                container.innerHTML += `<h3>Approved Meetings</h3>`;
+
+                if (approved.length === 0) {
+                    container.innerHTML += `<p>No approved meetings.</p>`;
+                } else {
+                    approved.forEach(m => {
+                        container.innerHTML += `
+          <div class="meeting-card">
+            <h4>Student: ${m.studentId?.name || "Unknown"}</h4>
+            <p>Email: ${m.studentId?.email || "-"}</p>
+            <p><b>Final Date:</b> ${m.finalDate}</p>
+            <p><b>Meet:</b>
+              <a href="${m.meetLink}" target="_blank">
+                ${m.meetLink || "(No link)"}
+              </a>
+            </p>
+
+            <div class="controls">
+              <input type="date" id="newdate-${m._id}">
+              <input type="time" id="newtime-${m._id}">
+              <select id="newampm-${m._id}">
+                <option>AM</option><option>PM</option>
+              </select>
+
+              <button class="btn btn-reschedule" onclick="reschedule('${m._id}')">Reschedule</button>
+              <button class="btn btn-remove" onclick="reject('${m._id}')">Remove</button>
+            </div>
+          </div>`;
+                    });
+                }
+
+            } catch (e) {
+                document.getElementById("requestList").innerHTML = "Error loading meetings.";
+            }
+        }
+
+        // 3. Action Functions (Approve, Reject, Reschedule)
+        async function approve(meetingId) {
+            const date = document.getElementById(`date-${meetingId}`).value;
+            const time = document.getElementById(`time-${meetingId}`).value;
+            const ampm = document.getElementById(`ampm-${meetingId}`).value;
+
+            if (!date || !time) return alert("Please select date and time");
+
+            const formattedTime = convertToAmPm(time, ampm);
+            const finalDate = `${date} at ${formattedTime}`;
+
+            try {
+                const res = await fetch("/api/meetings/approve", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ meetingId, finalDate }),
+                });
+                const data = await res.json();
+                if (data.error) alert("Error: " + data.error);
+                else {
+                    alert("✅ Meeting Approved!");
+                    loadRequests();
+                }
+            } catch (err) {
+                alert("Failed to communicate with server");
+            }
+        }
+
+        async function reject(meetingId) {
+            if (!confirm("Are you sure? This will remove the request.")) return;
+
+            try {
+                const res = await fetch("/api/meetings/reject", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ meetingId }),
+                });
+                const data = await res.json();
+                if (data.error) alert(data.error);
+                else {
+                    alert("✅ Meeting Removed.");
+                    loadRequests();
+                }
+            } catch (err) {
+                alert("Failed to remove");
+            }
+        }
+
+        async function reschedule(meetingId) {
+            const date = document.getElementById(`newdate-${meetingId}`).value;
+            const time = document.getElementById(`newtime-${meetingId}`).value;
+            const ampm = document.getElementById(`newampm-${meetingId}`).value;
+
+            if (!date || !time) return alert("Please select new date and time");
+
+            const formattedTime = convertToAmPm(time, ampm);
+            const newFinalDate = `${date} at ${formattedTime}`;
+
+            try {
+                const res = await fetch("/api/meetings/reschedule", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ meetingId, newFinalDate }),
+                });
+                const data = await res.json();
+                if (data.error) alert(data.error);
+                else {
+                    alert("✅ Date updated successfully.");
+                    loadRequests();
+                }
+            } catch (err) {
+                alert("Failed to update");
+            }
+        }
+
+        // Calendar Toggle Logic
+        function toggleCalendar() {
+            const body = document.getElementById("calendarBody");
+            const arrow = document.getElementById("calendarArrow");
+            body.classList.toggle("open");
+            arrow.style.transform = body.classList.contains("open")
+                ? "rotate(180deg)"
+                : "rotate(0deg)";
+        }
+
+        // Initial Load
+        loadTrainerInfo();
+        loadRequests();
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Schedule Meeting</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <header>
+    <h2>Schedule One-on-One Meeting</h2>
+  </header>
+
+  <section class="container">
+    <form id="scheduleForm">
+
+      <label>Your Name</label>
+      <input type="text" name="name" required />
+
+      <label>Your Email</label>
+      <input type="email" name="email" required />
+
+      <button type="submit" class="btn">Request for Meeting</button>
+    </form>
+
+    <p id="msg"></p>
+  </section>
+
+  <script>
+    const scheduleForm = document.getElementById("scheduleForm");
+
+    scheduleForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const form = new FormData(scheduleForm);
+      const name = form.get("name");
+      const email = form.get("email");
+
+      const msg = document.getElementById("msg");
+      msg.innerText = "Sending request...";
+
+      try {
+        // Step 1 → create student in backend
+        const studentRes = await fetch("/api/students/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name,
+            email,
+            careerInterest: "Unknown" // placeholder
+          })
+        });
+
+        const studentData = await studentRes.json();
+        const studentId = studentData.student._id;
+
+        // Step 2 → send meeting request WITHOUT trainerId
+        const requestedDate = new Date().toISOString(); // just current date/time as placeholder
+        const meetingRes = await fetch("/api/meetings/smart-auto", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            studentId,
+            requestedDate
+          })
+        });
+
+        if (meetingRes.ok) {
+          msg.innerText = "Your meeting request is sent! Trainer will assign the time.";
+          scheduleForm.reset();
+        } else {
+          const errData = await meetingRes.json();
+          msg.innerText = "Error: " + (errData.error || "Could not schedule meeting.");
+        }
+
+      } catch (err) {
+        console.error(err);
+        msg.innerText = "Something went wrong. Try again.";
+      }
+    });
+  </script>
+</body>
+
+</html>
