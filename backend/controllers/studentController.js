@@ -15,20 +15,25 @@ export const register = async (req, res) => {
         if (existingSql.length > 0) return res.status(400).json({ message: "Email already registered in system." });
 
         // 2. Hash Password
+        console.log("[Registration] Hashing password...");
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // 3. Save to MongoDB
+        console.log("[Registration] Saving to MongoDB...");
         const newStudent = new Student({
             fullName, email, password: hashedPassword,
             mobile, gender, dob, address
         });
         await newStudent.save();
+        console.log("[Registration] Saved to MongoDB ✅");
 
         // 4. Save to MySQL
+        console.log("[Registration] Saving to MySQL...");
         await mysqlPool.query(
             "INSERT INTO students (fullName, email, password, mobile, gender, dob, address) VALUES (?, ?, ?, ?, ?, ?, ?)",
             [fullName, email, hashedPassword, mobile, gender, dob, address]
         );
+        console.log("[Registration] Saved to MySQL ✅");
 
         console.log(`✅ Student registered successfully: ${email}`);
         res.status(201).json({ message: "Registration successful ✅" });
@@ -322,28 +327,39 @@ export const getRecordedSessions = async (req, res) => {
         const { studentId } = req.params;
         let domain = "General";
 
-        try {
-            if (studentId && studentId !== "undefined") {
+        // Try to find the student in MySQL first to get the most up-to-date domain
+        const [studentRows] = await mysqlPool.query("SELECT domain FROM students WHERE id = ?", [studentId]);
+        if (studentRows.length > 0) {
+            domain = studentRows[0].domain || "General";
+        } else {
+            // Fallback to Mongo if not in MySQL
+            try {
                 const student = await Student.findById(studentId);
                 if (student) domain = student.domain || "General";
+            } catch (e) {
+                console.log("RecordedSessions: Mongo fallback failed:", e.message);
             }
-        } catch (e) {
-            console.log("RecordedSessions: Falling back to General domain:", e.message);
         }
 
-        // Tier 1: Domain-specific ONLY (Requested change: only selected career)
-        let [videos] = await mysqlPool.query(
-            "SELECT * FROM recorded_sessions WHERE domain = ? ORDER BY id DESC",
-            [domain]
-        );
+        // Fetch videos matching the domain strictly
+        const [domainVideos] = await mysqlPool.query("SELECT * FROM recorded_sessions WHERE domain = ?", [domain]);
 
-        // Tier 2: If no domain-specific, fallback to all for safety or General
-        if (videos.length === 0) {
-            const [genVideos] = await mysqlPool.query("SELECT * FROM recorded_sessions WHERE domain = 'General' ORDER BY id DESC");
-            videos = genVideos;
+        if (domainVideos.length > 0) {
+            // Sort them by title alphabetically
+            const sorted = [...domainVideos].sort((a, b) => a.title.localeCompare(b.title));
+            return res.json({ domain: domain, videos: sorted });
+        } else {
+            // ABSOLUTE FALLBACK: The specific random video provided by user
+            // https://youtu.be/KfNrHZUH3WU?si=5QtDtxKZTUks6SLx
+            const fallbackVideo = {
+                id: 'fallback-random',
+                title: "Master Your Technical Career",
+                youtubeLink: "KfNrHZUH3WU",
+                domain: domain,
+                description: "A comprehensive guide to mastering your domain and cracking technical interviews with expert insights."
+            };
+            return res.json({ domain: domain, videos: [fallbackVideo] });
         }
-
-        res.json({ domain: domain || "General", videos });
     } catch (err) {
         console.error("RecordedSessions Fatal Error:", err);
         res.status(500).json({ error: err.message });
@@ -352,8 +368,18 @@ export const getRecordedSessions = async (req, res) => {
 
 export const getAllRecordedSessions = async (req, res) => {
     try {
-        const [videos] = await mysqlPool.query("SELECT * FROM recorded_sessions ORDER BY id DESC");
-        res.json({ domain: "All Sessions", videos });
+        const [videos] = await mysqlPool.query("SELECT * FROM recorded_sessions");
+
+        // Sort by domain then title
+        const sortedVideos = [...videos].sort((a, b) => {
+            if (a.domain < b.domain) return -1;
+            if (a.domain > b.domain) return 1;
+            if (a.title < b.title) return -1;
+            if (a.title > b.title) return 1;
+            return 0;
+        });
+
+        res.json({ domain: "All Sessions", videos: sortedVideos });
     } catch (err) {
         console.error("AllRecordedSessions Fatal Error:", err);
         res.status(500).json({ error: err.message });

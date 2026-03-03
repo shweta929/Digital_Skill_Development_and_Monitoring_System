@@ -14,8 +14,14 @@ const TopicSessions = () => {
     const student = JSON.parse(localStorage.getItem("student"));
 
     // --- MASTER STATIC FALLBACK (Insurance Policy) ---
+    // Updated to follow user request: If no matching videos, show the Career Success Guide
     const staticSessions = [
-        { id: 'static-1', title: "Java Full Masterclass", youtubeLink: "GCXKd7DfR0c", description: "Mastering Java from basics to advanced features like Streams, Collections, and Multi-threading. Perfect for career placement." },
+        {
+            id: 'static-fallback',
+            title: "Master Your Technical Career",
+            youtubeLink: "KfNrHZUH3WU",
+            description: "A comprehensive guide to mastering your domain and cracking technical interviews with expert insights from Dr. Amar Panchal."
+        },
         { id: 'static-2', title: "Spring Boot & Cloud Integration", youtubeLink: "CDbQVssqGcE", description: "Deep dive into building scalable enterprise applications using Spring Boot, Microservices, and Cloud-native architectures." },
         { id: 'static-3', title: "Python for Data Science", youtubeLink: "kTYVZkY41eU", description: "Essential Python programming for data analysis, machine learning foundations, and automation scripting for technical professionals." },
         { id: 'static-4', title: "React Native App Dev", youtubeLink: "H1vW9P6GQPQ", description: "Build high-performance cross-platform mobile applications for iOS and Android using a single React codebase." },
@@ -27,6 +33,8 @@ const TopicSessions = () => {
             navigate("/login");
             return;
         }
+        // Set initial topic from student domain to avoid flicker
+        if (student.domain) setTopic(student.domain);
         fetchStudentTopic();
     }, [student?.id, student?._id]);
 
@@ -39,9 +47,11 @@ const TopicSessions = () => {
             const res = await fetch(`/api/students/sessions/${id}`);
             if (res.ok) {
                 const data = await res.json();
-                setTopic(data.domain || "Technical Training");
-                setSessions(data.videos || []);
+                if (data.domain) setTopic(data.domain);
+
+                // If API returns videos (including the backend fallback), use them
                 if (data.videos && data.videos.length > 0) {
+                    setSessions(data.videos);
                     setActiveVideo(data.videos[0]);
                 }
             } else {

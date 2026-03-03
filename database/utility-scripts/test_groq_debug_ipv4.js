@@ -1,6 +1,5 @@
 const https = require('https');
-
-const apiKey = process.env.GROQ_API_KEY;
+//const apiKey = process.env.GROQ_API_KEY;
 
 if (!apiKey) {
     console.error("GROQ_API_KEY not set");

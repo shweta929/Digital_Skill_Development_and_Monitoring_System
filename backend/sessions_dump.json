@@ -1,0 +1,47 @@
+[
+  {
+    "id": 1,
+    "domain": "enterprise",
+    "title": "Java Full Masterclass",
+    "description": " Accelerate your career with the power of Java! This masterclass is your fast-track to becoming a world-class enterprise architect. Master the logic and frameworks that power the global tech economy and build the future today!",
+    "youtubeLink": "GCXKd7DfR0c",
+    "uploadedBy": "Admin",
+    "createdAt": "2026-03-02T12:46:06.000Z"
+  },
+  {
+    "id": 2,
+    "domain": "enterprise",
+    "title": "Spring Boot & Cloud Integration",
+    "description": " Ready to build high-performance, scalable web engines? Master Spring Boot and Cloud-native microservices here. Ignite your passion for building complex, distributed systems that define the modern internet.",
+    "youtubeLink": "CDbQVssqGcE",
+    "uploadedBy": "Admin",
+    "createdAt": "2026-03-02T12:46:06.000Z"
+  },
+  {
+    "id": 3,
+    "domain": "intelligence",
+    "title": "Python for Data Science",
+    "description": " Unlock the universe of data! Python is your magic wand for creating AI, predictive models, and deep-learning insights. Join this session to become a visionary who turns raw numbers into revolutionary solutions.",
+    "youtubeLink": "kTYVZkY41eU",
+    "uploadedBy": "Admin",
+    "createdAt": "2026-03-02T12:46:06.000Z"
+  },
+  {
+    "id": 4,
+    "domain": "General",
+    "title": "React Native App Dev",
+    "description": " Your innovation, everywhere! Master React Native and build beautiful, lightning-fast mobile apps for both iOS and Android simultaneously. Be the developer who creates stunning user experiences that millions will love.",
+    "youtubeLink": "H1vW9P6GQPQ",
+    "uploadedBy": "Admin",
+    "createdAt": "2026-03-02T12:46:06.000Z"
+  },
+  {
+    "id": 5,
+    "domain": "automation",
+    "title": "Ultimate Node.js Guide",
+    "description": " Build the real-time backbone of the web! Node.js is the engine for high-concurrency, scalable backend systems. Master this powerhouse and become the engineer that keeps the world's data moving at light speed.",
+    "youtubeLink": "-BvgaDXy_z8",
+    "uploadedBy": "Admin",
+    "createdAt": "2026-03-02T12:46:06.000Z"
+  }
+]

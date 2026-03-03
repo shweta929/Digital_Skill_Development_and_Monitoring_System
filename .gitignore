@@ -15,6 +15,11 @@ dist/
 build/
 out/
 .next/
+bin/
+obj/
+*.exe
+*.dll
+*.pdb
 
 # Java / Maven
 target/
@@ -40,3 +45,29 @@ application.properties
 *.local
 credentials.json
 token.json
+*.pfx
+*.cer
+*.key
+*.pem
+
+# Project Logs and Tmp
+out.log
+err.log
+*.log
+
+# Exclude generated/trash txt, but keep docs
+api_out.txt
+web_out.txt
+api_err.txt
+web_err.txt
+staged_files.txt
+git_status.txt
+mongo_log.txt
+schema_info.txt
+
+# (Add more as needed)
+*.bak
+*.tmp
+/logs/
+
+

@@ -1,6 +1,5 @@
 const https = require('https');
-//const apiKey = process.env.GROQ_API_KEY;
-
+const apiKey = process.env.GROQ_API_KEY;
 const data = JSON.stringify({
     model: "llama-3.1-8b-instant",
     messages: [
